@@ -1,6 +1,4 @@
-class Solution { // Approach-1. 
-                // 1. make string of all vowels and sort the string of vowels. 
-                // 2. Traverse in original string(s) and if vowel is encountered in original string then replace with vowel present in vowel string(temp)
+class Solution { // Approach-2. 
 public:
     bool isVowel(char ch){
         ch = tolower(ch);
@@ -8,20 +6,25 @@ public:
         return (ch == 'a' || ch == 'e' || ch == 'i' || ch == 'o' || ch == 'u');
     }
     string sortVowels(string s) {
-        string temp;
+        unordered_map<char, int> freq; 
 
         for(char ch : s){
-            if(isVowel(ch))
-            temp.push_back(ch);
+            if(isVowel(ch)) // if vowel in original string then store in the freq map with the frequency of that vowel
+            freq[ch]++;
         }
 
-        sort(temp.begin(), temp.end());
+        string temp;
+        temp = "AEIOUaeiou";
         int j = 0;
 
         for(int i = 0; i < s.length(); i++){
             if(isVowel(s[i])){
+                while(freq[temp[j]] == 0){ // temp vowel is not present in freq map means the vowel is not in original string. so increment j pointer
+                    j++;
+                }
+            // else
                 s[i] = temp[j];
-                j++;
+                freq[s[i]]--;
             }
         }
         return s;
