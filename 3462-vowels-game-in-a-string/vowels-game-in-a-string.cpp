@@ -8,11 +8,11 @@ public:
             temp.push_back(ch);
         } 
 
-        if((temp.length() != 0 && temp.length() % 2 == 0 )|| temp.length() == s.length())
+        if((temp.length() >= 1)|| temp.length() == s.length())
         return true;
 
-        else if(temp.length() == 1 || temp.length() % 2 == 1)
-        return true;
+        // else if(temp.length() == 1 || temp.length() % 2 == 1)
+        // return true;
 
         // else if(temp.length() == 0 || temp.length() % 2 == 1)
         return false;
