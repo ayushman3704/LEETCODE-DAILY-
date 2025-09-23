@@ -1,4 +1,4 @@
-class Solution { // using sliding window standard template. call slinding window twice once for k and once for k - 1
+class Solution { // using sliding window. APPROACH - 2
 public:
     int slidingWindow(vector<int> &nums, int k){
         int n = nums.size();
@@ -7,7 +7,8 @@ public:
 
         int i = 0;
         int j = 0;
-        int count = 0;
+        int i_badda = 0;
+        int res = 0;
 
         while(j < n){
             mp[nums[j]]++;
@@ -19,15 +20,23 @@ public:
                 mp.erase(nums[i]);
 
                 i++;
-            }
-            count += j - i + 1; // no. of total subarray of size less than or equal to k, ending at j
 
+                i_badda = i;
+            }
+            while(mp[nums[i]] > 1){ // shrink window size to get minimum sized window of exactly k distinct integer
+                mp[nums[i]]--;
+                i++;
+            }
+            
+            if(mp.size() == k){
+                res += (1 + i - i_badda); // i - i_badda, no. of extra window. +1 for minimum sized window 
+            }
             j++;
         }
-        return count;
+        return res;
     }
     int subarraysWithKDistinct(vector<int>& nums, int k) {
-        // by subtracting total no. of subarrays which has less than or equal to k-1 distict integer from k distict integer subarrays will give the total no. of subarrays which has exactly k distict integers
-        return slidingWindow(nums, k) - slidingWindow(nums, k-1);
+
+        return slidingWindow(nums, k);
     }
 };
