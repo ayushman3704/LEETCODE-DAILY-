@@ -1,14 +1,11 @@
-class Solution { // using two pointer. without using extra space
+class Solution { // using custom sorting or comparator functioon
 public:
+    static bool comparator(int &a, int &b){
+        return (a % 2 < b % 2);
+    }
     vector<int> sortArrayByParity(vector<int>& nums) {
-        int i = 0;
+        sort(begin(nums), end(nums), comparator);
 
-        for(int j = 0; j < nums.size(); j++){
-            if(nums[j] % 2 == 0){
-                swap(nums[j], nums[i]);
-                i++;
-            }
-        }
         return nums;
     }
 };
