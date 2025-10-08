@@ -1,27 +1,22 @@
-class Solution { // using bottom up approach. Blueprint.
+class Solution { // using property of palindrome. approach- 4
 public:
+    int count;
+
+    void check(string &s, int i, int j, int n){
+        while(i >= 0 && j < n && s[i] == s[j]){
+            count++;
+            i--;
+            j++;
+        }
+    }
     int countSubstrings(string s) {
         int n = s.length();
 
-        vector<vector<bool>> t(n, vector<bool>(n, false));
+        count = 0;
 
-        int count = 0;
-
-        for(int l = 1; l <= n; l++){
-            for(int i = 0; i+l-1 < n ; i++){
-                int j = i+l-1;
-
-                if(i == j){
-                    t[i][j] = true;
-                }else if(i+1 == j){
-                    t[i][j] = (s[i] == s[j]);
-                }else{
-                    t[i][j] = (s[i] == s[j] && t[i+1][j-1]);
-                }
-
-                if(t[i][j] == true)
-                count++;
-            }
+        for(int i = 0; i < n; i++){
+            check(s, i, i, n);
+            check(s, i, i+1, n);
         }
         return count;
     }
