@@ -1,34 +1,28 @@
-class Solution {
+class Solution { // recursion + memoization
 public:
+
+    int solve(vector<int>& energy, int i, int k, vector<int> &t){
+        int n = energy.size();
+
+        if(i >= n)
+        return 0;
+
+        if(t[i] != INT_MIN)
+        return t[i];
+
+        return t[i] = energy[i] + solve(energy, i+k, k, t);
+    }
     int maximumEnergy(vector<int>& energy, int k) {
         int n = energy.size();
 
-        int maxSum = -1e9;
+        vector<int> t(n, INT_MIN);
 
-        int sum = 0;
-
-        vector<int> vis(n, 0);
-
-        for(int i = 0; i < n; i++){
-            if(vis[i] == 1)
-            continue;
+        int maxEnergy = -1e9;
         
-
-            int j = i;
-            sum = 0;
-
-            while(j < n){
-                vis[j] = 1;
-
-                sum += energy[j];
-
-                sum = max(sum, energy[j]);
-
-                j += k;
-            }
-
-            maxSum = max(sum, maxSum);
+        for(int i = 0; i < n; i++){
+            maxEnergy = max(maxEnergy, solve(energy, i, k, t));
         }
-        return maxSum;
+
+        return maxEnergy;
     }
 };
