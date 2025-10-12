@@ -1,21 +1,20 @@
-class Solution { // using recursion + memoization
+class Solution { // bottom up
 public:
-    int t[101];
-    int solve(vector<int>& nums, int i){
-        if(i >= nums.size())
-        return 0;
-
-        if(t[i] != -1)
-        return t[i];
-
-        int rob = nums[i] + solve(nums, i+2); // if rob then amount of money will increase so we add nums[i] and he has to skip next house so i+2.
-        int not_rob = solve(nums, i+1);
-
-        return t[i] = max(rob, not_rob);
-    }
     int rob(vector<int>& nums) {
-        memset(t, -1, sizeof(t));
+        int n = nums.size();
 
-        return solve(nums, 0);
+        vector<int> dp(n+1, 0);
+
+        dp[n] = 0;
+        dp[n-1] = nums[n-1];
+
+        for(int i = n-2; i >= 0; i--){
+            int steal = nums[i] + dp[i + 2];
+            int skip = dp[i+1];
+
+            dp[i] = max(steal, skip);
+        }
+
+        return dp[0];
     }
 };
