@@ -1,20 +1,24 @@
-class Solution { // brute force
+class Solution { // optimal approach.
 public:
-    bool isIncreasing(vector<int>& nums, int s, int e){
-        for(int i = s+1; i < e; i++){
-            if(nums[i] <= nums[i-1])
-            return false;
-        }
-        return true;
-    }
     bool hasIncreasingSubarrays(vector<int>& nums, int k) {
         int n = nums.size();
 
-        for(int start = 0; start+2*k <= n; start++){
-            int first_window = isIncreasing(nums, start, start+k);
-            int second_window = isIncreasing(nums, start+k, start+2*k);
+        int currRun = 1; // store the length of current strictly increasing subarray
+        int prevRun = 0; // store the length of strictly increasing subarray
 
-            if(first_window && second_window){
+        for(int i = 1; i < n; i++){
+            if(nums[i] > nums[i-1]){
+                currRun++;
+            }else{
+                prevRun = currRun;
+                currRun = 1;
+            }
+
+            if(currRun/2 >= k){
+                return true;
+            }
+
+            if(min(currRun, prevRun) >= k){
                 return true;
             }
         }
