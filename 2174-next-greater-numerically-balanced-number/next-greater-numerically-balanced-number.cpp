@@ -1,28 +1,42 @@
-class Solution { // simple brute force approach
+class Solution { // using backtracking
 public:
-    bool isBalance(int n){
+    vector<int> digitCount{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}; // vector that store count of each digit, means 0-> 0, 1-> 1, 2-> 2 and so on
 
-        vector<int> freq(10);
+    int backtracking(int num, int curr, int count){
 
-        while(n > 0){ // fill freq vector to store the frequency of the digit present in the n
-            int digit = n % 10;
-            freq[digit]++;
-
-            n = n/10;
+        if(count == 0){ // base case
+            for(int digit = 1; digit <= 9; digit++){ // case for balanced number strictly greater than num
+                if(digitCount[digit] != 0 && digitCount[digit] != digit)
+                return 0;
+            }
+            return curr > num ? curr : 0;
         }
 
-        for(int i = 0; i < 10; i++){ // traverse on freq vector
-            if(freq[i] > 0 && freq[i] != i)
-            return false;
+        int result = 0;
+
+        for(int digit = 1; digit <= 9; digit++){
+            if(digitCount[digit] > 0 && digitCount[digit] <= count){
+                digitCount[digit]--;
+                result = backtracking(num, curr*10+digit, count-1);
+                digitCount[digit]++;
+            }
+
+            if(result != 0)
+            break;
         }
-        return true;
+        return result;
     }
+    
     int nextBeautifulNumber(int n) {
         
-        for(int i = n+1; i <= 1224444; i++){ // 1224444 last balenced number strictly greater than 1e6(test case limit)
-            if(isBalance(i))
-            return i;
-        }
-        return 0;
+        int numDigit = to_string(n).length();
+
+        int result = backtracking(n, 0, numDigit);
+
+        if(result == 0)
+        return backtracking(n, 0, numDigit+1);
+
+        return result;
     }
 };
+// smallest numerically balanced number strictly greater than n. should be the same length of the num or just length + 1
