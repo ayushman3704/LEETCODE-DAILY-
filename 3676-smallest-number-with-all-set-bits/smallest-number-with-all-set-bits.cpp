@@ -1,13 +1,15 @@
 class Solution { 
 public:
+    bool isBitSet(int n){
+
+        return (n & (n+1)) == 0; // to check that n is set.
+    }
     int smallestNumber(int n) {
         
-        int res = 1;
-
-        while(res < n){
-            res = 2*res + 1; // next set bit number
+        int res = n;
+        while(!isBitSet(res)){
+            res++;
         }
-
         return res;
     }
 };
