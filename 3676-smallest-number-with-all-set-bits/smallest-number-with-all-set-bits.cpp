@@ -2,8 +2,12 @@ class Solution {
 public:
     int smallestNumber(int n) {
         
-        int bits = log2(n) + 1; // to calculate number of bits in any decimal number.
+        int res = 1;
 
-        return (1 << bits) - 1;
+        while(res < n){
+            res = 2*res + 1; // next set bit number
+        }
+
+        return res;
     }
 };
