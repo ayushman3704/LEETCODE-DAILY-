@@ -1,14 +1,18 @@
-class Solution {
+class Solution { // Approach - 2
 public:
     bool isOneBitCharacter(vector<int>& bits) {
         
         int n = bits.size();
 
-        int i = 0;
-        while(i < n-1){
-            i += (bits[i] == 1) ? 2 : 1; // if bits[i] == 1 hai to i ko 2 se increment krenge else 1 se increment krenge
+        int count = 0;
+        for(int i = n-2; i >= 0; i--){
+            if(bits[i] == 1){
+                count++;
+            }else{
+                break;
+            }
         }
 
-        return i == n-1; 
+        return count % 2 == 0; 
     }
 };
