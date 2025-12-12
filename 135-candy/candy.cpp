@@ -1,0 +1,28 @@
+class Solution {
+public:
+    int candy(vector<int>& ratings) {
+        int n = ratings.size();
+
+        vector<int> L2R(n, 1); // to store no. of candy distributed on the basis of left to right ratings.
+        vector<int> R2L(n, 1); // to store no. of candy distributed on the basis of right to left ratings.
+
+        for(int i = 1; i < n; i++){ // traverse left to right
+            if(ratings[i] > ratings[i-1]){
+                L2R[i] = max(L2R[i], L2R[i-1]+1);
+            }
+        }
+
+        for(int i = n-2; i >= 0; i--){ // traverse right to left
+            if(ratings[i] > ratings[i+1]){
+                R2L[i] = max(R2L[i], R2L[i+1]+1);
+            }
+        }
+
+        int res = 0;
+        for(int i = 0; i < n; i++){
+            res += max(L2R[i], R2L[i]);
+        }
+
+        return res;
+    }
+};
