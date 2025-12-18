@@ -17,9 +17,11 @@ public:
                 jump++;
                 currEnd = maxReach;
             }
+            if(currEnd >= n-1)
+            return jump;
         }
-        if(currEnd >= n-1)
-        return jump;
+        // if(currEnd >= n-1)
+        // return jump;
 
         return -1;
     }
