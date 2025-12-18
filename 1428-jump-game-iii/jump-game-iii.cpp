@@ -1,36 +1,25 @@
 class Solution { // using bfs
 public:
-    bool bfs(vector<int>& arr, int start, int n){
-        queue<int> q;
-        q.push(start);
-
-        while(!q.empty()){
-            int curr = q.front();
-            q.pop();
-
-            if(arr[curr] == 0)
-            return true;
-
-            if(arr[curr] < 0) // if element is visited, continue
-            continue;
-
-            int left = curr - arr[curr];
-            int right = curr + arr[curr];
-
-            if(left >= 0 && left < n){
-                q.push(left);
-            }
-            if(right >= 0 && right < n){
-                q.push(right);
-            }
-
-            arr[curr] = -arr[curr]; // mark that element visited
-        }
+    bool dfs(vector<int>& arr, int start, int n){
+        if(start < 0 || start >= n || arr[start] < 0)
         return false;
+
+        if(arr[start] == 0)
+        return true;
+        //I don't want to check start again in future
+        //I could memoize it as well but making use of the fact
+        //0 <= arr[i] < arr.length
+        arr[start] = -arr[start];
+		
+        int left = dfs(arr, start-arr[start], n);
+        int right = dfs(arr, start+arr[start], n);
+        
+        return left||right;
     }
+
     bool canReach(vector<int>& arr, int start) {
         int n = arr.size();
 
-        return bfs(arr, start, n);
+        return dfs(arr, start, n);
     }
 };
