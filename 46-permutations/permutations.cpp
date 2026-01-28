@@ -1,33 +1,40 @@
-class Solution { // backtracking. take or not take 
+class Solution { // backtracking (permutation)
 public:
-    vector<vector<int>> res;
-    int n;
-    unordered_set<int> st;
+    vector<vector<int>> ans;
 
-    void solve(vector<int>& nums, vector<int> &temp){
-        if(temp.size() == n){ // base case 
-            res.push_back(temp);
+    void backtrack(vector<int>& nums,
+                   vector<bool>& used,
+                   vector<int>& curr) {
+
+        // If current permutation is complete
+        if(curr.size() == nums.size()) {
+            ans.push_back(curr);
             return;
         }
 
-        for(int i = 0; i < n; i++){
-            if(st.find(nums[i]) == st.end()){ // check if integers are not in the temp then do following
-                temp.push_back(nums[i]);
-                st.insert(nums[i]); // the integers which is pushed into the temp should not be pushed again into the temp
+        // Try all unused elements
+        for(int i = 0; i < nums.size(); i++) {
 
-                solve(nums, temp); // every time we call recursive func for all integers of nums
+            if(used[i]) continue;
 
-                temp.pop_back();
-                st.erase(nums[i]);
-            }
+            // Choose
+            used[i] = true;
+            curr.push_back(nums[i]);
+
+            // Explore
+            backtrack(nums, used, curr);
+
+            // Un-choose (BACKTRACK)
+            curr.pop_back();
+            used[i] = false;
         }
     }
+
     vector<vector<int>> permute(vector<int>& nums) {
-        n = nums.size();
-        vector<int> temp;
+        vector<bool> used(nums.size(), false);
+        vector<int> curr;
 
-        solve(nums, temp);
-
-        return res;
+        backtrack(nums, used, curr);
+        return ans;
     }
 };
