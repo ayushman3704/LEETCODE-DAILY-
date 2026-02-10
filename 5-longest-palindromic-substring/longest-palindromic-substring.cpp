@@ -1,49 +1,34 @@
-class Solution { //Using Bottom Up (BLUEPRINT)
+class Solution { // Approach- expand around centre. for odd length string cenntre character will be one. For even length string centre character will be two
 public:
+    string expand(string s, int left, int right){ // Generate palindrom around the centre character. 
+
+        while(left >= 0 && right <= s.length() && s[left] == s[right]){
+
+            left--;
+            right++;
+        }
+
+        return s.substr(left + 1, right-left-1);
+    }
+
     string longestPalindrome(string s) {
-        int n = s.length();
         
-        int maxL  = 0;
-        int index = 0;
-        
-        vector<vector<bool>> t(n, vector<bool>(n));
-        //t[i][j] = lps in s[i...j]
-        
-        maxL = 1; //every letter is a substring and pallindrome as well
-        for(int i = 0; i<n; i++) {
-            t[i][i] = true;
-            /*
-                s[0..0] = pallindrome
-                s[1..1] = pallindrome
-                s[2..2] = pallindrome
-                .
-                .
-                .
-            */
+        string res = "";
+
+        if(s.length() == 0) return "";
+
+        for(int i = 0; i < s.length(); i++){
+
+            string p1 = expand(s, i, i); // odd length
+
+            string p2 = expand(s, i, i+1); // even length
+
+            if(p1.length() > res.length())
+            res = p1;
+
+            if(p2.length() > res.length())
+            res = p2;
         }
-        
-        for(int L = 2; L<=n; L++) {
-            for(int i = 0; i<n-L+1; i++) {
-                int j = i + L - 1;
-                
-                if(s[i] == s[j] && L == 2) {
-                    t[i][j] = true;
-                    maxL = 2;
-                    index = i;
-                } else if (s[i] == s[j] && t[i+1][j-1] == true) {
-                    t[i][j] = true;
-                    if(j-i+1 > maxL) {
-                        maxL = j-i+1;
-                        index = i;
-                    }
-                } else {
-                    t[i][j] = false;
-                }
-                
-            }    
-        }
-        
-        
-        return s.substr(index, maxL);
+        return res;
     }
 };
