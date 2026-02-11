@@ -1,22 +1,28 @@
-class Solution { // using prefix sum. Same invariant as leetcode 560
+class Solution { // Sliding window approach. Optimal 
 public:
-    int numSubarraysWithSum(vector<int>& nums, int goal) {
-        
-        int sum = 0;
+    int atMostK(vector<int> &nums, int k){
+        if(k < 0)
+        return 0;
+
         int count = 0;
+        int sum = 0;
+        int left = 0;
 
-        unordered_map<int, int> mp;
-        mp[0] = 1;
+        for(int right = 0; right < nums.size(); right++){
 
-        for(int i = 0; i < nums.size(); i++){
+            sum += nums[right];
 
-            sum += nums[i];
+            while(sum > k){
+                sum -= nums[left];
+                left++;
+            }
 
-            if(mp.find(sum - goal) != mp.end())
-            count += mp[sum - goal];
-
-            mp[sum]++;
+            count += right-left+1;
         }
         return count;
+    }
+    int numSubarraysWithSum(vector<int>& nums, int goal) {
+        
+        return atMostK(nums, goal) - atMostK(nums, goal-1);
     }
 };
