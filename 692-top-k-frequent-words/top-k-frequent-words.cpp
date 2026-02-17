@@ -1,40 +1,51 @@
-class Solution { // Brute force using sorting.
+class Solution { // using min heap (optimal)
 public:
-    // Comparator used for sorting
-    // Higher frequency comes first
-    // If frequency is same, lexicographically smaller word comes first
-    static bool comparator(const pair<string, int> &a, const pair<string, int> &b){
-        if(a.second != b.second){
-            return a.second > b.second; // higher frequency first
+    typedef pair<int, string> P;
+
+    struct lambda{
+        bool operator()(P &a, P &b){
+            if(a.first != b.first){
+            return a.first > b.first; // higher frequency first
         }
 
-        return a.first < b.first; // lexicographically smaller first
-    }
+        return a.second < b.second; // lexicographically smaller first
+        }
+    };
     vector<string> topKFrequent(vector<string>& words, int k) {
-        
-        // Step 1: Count frequency of each word
+
+        // Step 1: Count frequency
         unordered_map<string, int> mp;
 
         for(string word : words){
             mp[word]++;
         }
+        
+        // Step 2: Min heap to keep ONLY top k words
+        priority_queue<pair<int,string>,vector<pair<int,string>>,lambda> minHeap;
 
-        // Step 2: Store all (word, frequency) pairs
-        vector<pair<string, int>> arr;
+        // Step 3: Process each unique word
+        for(auto &it: mp){
+            // Push current word into heap
+            minHeap.push({it.second, it.first});
 
-        for(auto it : mp){
-            arr.push_back({it.first, it.second});
+            // If heap grows beyond k, remove the worst word
+            if(minHeap.size() > k){
+                minHeap.pop();
+            }
+        }
+        
+        // Step 4: Extract elements from heap
+        // Heap gives worst first, so reverse later
+        vector<string> res;
+        while(!minHeap.empty()){
+            res.push_back(minHeap.top().second);
+
+            minHeap.pop();
         }
 
-        // Step 3: Sort all unique words
-        sort(arr.begin(), arr.end(), comparator);
+        // Step 5: Reverse to get correct order
+        reverse(res.begin(), res.end());
 
-        // Step 4: Take first k words
-        vector<string> result;
-        for(int i = 0; i < k; i++){
-            result.push_back(arr[i].first);
-        }
-
-        return result;
+        return res;
     }
 };
