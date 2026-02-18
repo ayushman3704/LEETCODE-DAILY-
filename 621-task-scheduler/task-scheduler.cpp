@@ -1,24 +1,56 @@
-class Solution { // Using Gready Approach. (Fractional Knapsack Problem)
+class Solution { // using max Heap
 public:
     int leastInterval(vector<char>& tasks, int n) {
-        vector<int> mp(26, 0); // to store frequency of characters
+        
+        // Step 1: Count frequency of each task
+        // There are only 26 possible tasks (A to Z)
+        vector<int> freq(26, 0);
 
-        for(char &ch : tasks){
-            mp[ch-'A']++;
+        for(char ch : tasks){
+            freq[ch - 'A']++;
         }
 
-        sort(mp.begin(), mp.end());
+        // Step 2: Max Heap to always pick the task
+        // with highest remaining frequency
+        priority_queue<int> pq;
 
-        int maxFreq = mp[25]; // mp is sorted in increasing order so maximum frequency task will be at the end.
-        int idleSlots = (maxFreq-1)*n; // no. of idle slots between max freq. charactor
-
-        for(int i = 24; i >= 0; i--){ // schedule tasks in the decrease order of their frequecy
-            idleSlots -= min(mp[i], maxFreq-1);
+        for(int f : freq){
+            if(f > 0){
+                pq.push(f);
+            }
         }
 
-        if(idleSlots > 0)
-        return tasks.size() + idleSlots;
+        // Step 3: Queue to manage cooldown
+        // Each element: {remaining_frequency, time_when_task_is_available}
+        queue<pair<int, int>> coolDown;
 
-        return tasks.size();
+        int currTime = 0;
+
+        while(!pq.empty() || !coolDown.empty()){
+
+            currTime++;
+
+            // release ALL tasks whose cooldown expired and push into max-heap
+            if(!coolDown.empty() && coolDown.front().second <= currTime){
+                pq.push(coolDown.front().first);
+
+                coolDown.pop();
+            }
+
+            // If there is an available task, execute it
+            if(!pq.empty()){
+                
+                // Pick the task with highest remaining frequency
+                int currFreq = pq.top();
+                pq.pop();
+
+                currFreq--; // execute the task and decrease frequency
+
+                if(currFreq > 0){ // if task frequency is remaining then push it into coolDown queue
+                    coolDown.push({currFreq, currTime + n + 1});
+                }
+            }
+        }
+        return currTime;
     }
 };
