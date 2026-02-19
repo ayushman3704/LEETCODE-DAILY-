@@ -1,42 +1,46 @@
-// OPTIMAL SOLUTION
-class Solution { // using priority queue. PATTERN- "FRACTIONAL KNAPSACK PROBLEM (A GREADY APPROACH)"
+class Solution { // max heap approach 
 public:
-    double mincostToHireWorkers(vector<int>& quality, vector<int>& min_wage, int k) {
+    double mincostToHireWorkers(vector<int>& quality, vector<int>& wage, int k) {
+        
         int n = quality.size();
 
-        vector<pair<double, int>> worker_ratio(n);
-        for(int worker = 0; worker < n; worker++) {
-            worker_ratio[worker] = make_pair((double)min_wage[worker]/quality[worker], quality[worker]);
-        }
-        sort(begin(worker_ratio), end(worker_ratio));
+        vector<pair<double, int>> workers; // Store {ratio, quality}
 
-        priority_queue<int, vector<int>> pq;
-        
-        double sum_quality = 0;
-        for(int i = 0; i < k; i++) { 
-            pq.push(worker_ratio[i].second); //push all qualities in max-heap
-            sum_quality += worker_ratio[i].second; //Find sum of qualities
+        for(int i = 0; i < n; i++){
+            double ratio = (double)wage[i]/quality[i];
+
+            workers.push_back({ratio, quality[i]});
         }
 
-        double managerRatio = worker_ratio[k-1].first; 
-        double result       = managerRatio * sum_quality;
+        sort(workers.begin(), workers.end()); // Sort workers by increasing ratio
 
-        for(int manager = k; manager < n; manager++) {
-            
-            managerRatio = worker_ratio[manager].first;
+        priority_queue<int> pq; // Max heap to keep K smallest qualities
 
-            pq.push(worker_ratio[manager].second); //push all qualities in max-heap
-            sum_quality += worker_ratio[manager].second; //Find sum of qualities
+        int sumQuality = 0;
+        double ans = 1e18;
 
-            if(pq.size() > k) {
-                sum_quality -= pq.top();
+        for(auto & w : workers){ 
+            double r = w.first;
+            int q = w.second;
+
+             // Add current worker
+            pq.push(q);
+            sumQuality += q;    
+
+            if(pq.size() > k){ // If more than K workers, remove the worst (largest quality)
+                sumQuality -= pq.top();
+
                 pq.pop();
             }
 
-            result = min(result, managerRatio*sum_quality);
+            // If exactly K workers, calculate cost
+            if(pq.size() == k){
+                double cost = (r*sumQuality);
 
+                ans = min(ans, cost);
+            }
         }
 
-        return result;
+        return ans; 
     }
 };
