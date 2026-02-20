@@ -1,27 +1,25 @@
-class Solution { // using line sweap
+class Solution { // using difference array technique(used for small range)
 public:
     bool carPooling(vector<vector<int>>& trips, int capacity) {
         
-        vector<vector<int>> events;
+        vector<int> diff(1001, 0);
 
-        // 1. Build events
+        // 1. Mark changes
         for(auto trip : trips){
             int p = trip[0];
             int f = trip[1];
             int t = trip[2];
 
-            events.push_back({f, +p});
-            events.push_back({t, -p});
+            diff[f] += p;
+            diff[t] -= p;
             
         }
 
-        sort(events.begin(), events.end()); // 2. Sort by position 
-
-        // 3. sweep line
+        // 2. Prefix sum + validation
         int currPassangers = 0;
-        for(auto event : events){
+        for(int i = 0; i < diff.size(); i++){
 
-            currPassangers += event[1];
+            currPassangers += diff[i];
 
             if(currPassangers > capacity) return false;
         }
