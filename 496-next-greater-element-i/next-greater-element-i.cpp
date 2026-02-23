@@ -1,30 +1,28 @@
-class Solution { // using monotonic stack
+class Solution {
 public:
     vector<int> nextGreaterElement(vector<int>& nums1, vector<int>& nums2) {
-        
-        unordered_map<int, int> nextGreater; // store {value, next greater value}
+        int n = nums2.size();
 
-        stack<int> st; // store nums2 elements
+        stack<int> st; // stack to store indices 
+        vector<int> nge(n, -1); // store next greater element at that index
 
-        for(int num : nums2){
-
-            while(!st.empty() && num > st.top()){
-                nextGreater[st.top()] = num;
+        for(int i = 0; i < n; i++){   // Step 1: compute NGE for nums2
+            while(!st.empty() && nums2[i] > nums2[st.top()]){
+                nge[st.top()] = nums2[i];
                 st.pop();
             }
-            st.push(num);
+            st.push(i);
         }
 
-        while(!st.empty()){ // no next greater element is present store -1
-            nextGreater[st.top()] = -1;
-            st.pop();
+        vector<int> res;
+        for(int x : nums1){
+            for(int i = 0; i < n; i++){
+                if(nums2[i] == x){ // find index of x in nums2
+                    res.push_back(nge[i]);
+                }
+            }
         }
 
-        // finally, nextGreater has next greater elements of all elements of nums2. Push elements from nums2 into res
-        vector<int> res; 
-        for(int num : nums1){
-            res.push_back(nextGreater[num]);
-        }
         return res;
     }
 };
