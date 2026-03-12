@@ -9,14 +9,14 @@ public:
         pq.push({score, 0});
 
         for(int i = 1; i < nums.size(); i++){
+            
+            pq.push({score, i});
 
-            while(pq.top().second < i-k){
+            while(pq.top().second <= i-k){
                 pq.pop();
             }
 
             score = nums[i] + pq.top().first;
-
-            pq.push({score, i});
         }
 
         return score;
