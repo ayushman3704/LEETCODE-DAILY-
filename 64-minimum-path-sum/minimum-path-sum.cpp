@@ -1,30 +1,28 @@
-class Solution { // recursion + memoization.
+class Solution { // Tabulation.
 public:
-    int solve(vector<vector<int>>& grid, int i, int j, vector<vector<int>>& t){
-        int m = grid.size();
-        int n = grid[0].size();
-
-        if(i == m-1 && j == n-1)
-        return grid[i][j];
-
-        if(t[i][j] != -1)
-        return t[i][j];
-
-        if(i == m-1) // we can move only in right 
-        return t[i][j] = grid[i][j] + solve(grid, i, j + 1, t);
-
-        else if(j == n-1) // we can move only in down
-        return t[i][j] = grid[i][j] + solve(grid, i+1, j, t);
-
-        // we can move in both directions right and down
-        return t[i][j] = grid[i][j] + min(solve(grid, i, j+1, t), solve(grid, i+1, j, t));
-    }
     int minPathSum(vector<vector<int>>& grid) {
+        
         int m = grid.size();
         int n = grid[0].size();
 
-        vector<vector<int>> t(m+1, vector<int>(n+1, -1));
+        vector<vector<int>> dp(m, vector<int>(n, 0));
 
-        return solve(grid, 0, 0, t);
+        dp[0][0] = grid[0][0];
+
+        for(int i = 1; i < m; i++) // first column
+        dp[i][0] = grid[i][0] + dp[i-1][0];
+
+        for(int j = 1; j < n; j++){ // First row
+            dp[0][j] = grid[0][j] + dp[0][j-1];
+        }
+
+        for(int i = 1; i < m; i++){
+            for(int j = 1; j < n; j++){
+
+                dp[i][j] = grid[i][j] + min(dp[i-1][j], dp[i][j-1]);
+            }
+        }
+        
+        return dp[m-1][n-1];
     }
 };
