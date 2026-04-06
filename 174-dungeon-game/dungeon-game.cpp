@@ -1,33 +1,30 @@
-class Solution { // recursion + memoization
+class Solution { // tabulation.
 public:
-    int t[201][201];
-    int solve(vector<vector<int>>& dungeon, int i, int j){
+    int calculateMinimumHP(vector<vector<int>>& dungeon) {
+        
         int m = dungeon.size();
         int n = dungeon[0].size();
 
-        if(i == m || j == n)
-        return 1e9;
+        vector<vector<int>> dp(m, vector<int>(n, 0));
 
-        if(t[i][j] != -1)
-        return t[i][j];
+        dp[m-1][n-1] = max(1, 1-dungeon[m-1][n-1]); // Base case
 
-        if(i == m-1 && j == n-1){
-            if(dungeon[i][j] > 0)
-            return 1;
+        for(int j = n-2; j >= 0; j--) // fill last row
+        dp[m-1][j] = max(1, dp[m-1][j+1] - dungeon[m-1][j]);
 
-            return abs(dungeon[i][j]) + 1;
+        for(int i = m-2; i >= 0; i--) // fill last column
+        dp[i][n-1] = max(1, dp[i+1][n-1] - dungeon[i][n-1]);
+
+        // fill rest of the cell
+        for(int i = m-2; i >= 0; i--){
+            for(int j = n-2; j >= 0; j--){
+
+                int next = min(dp[i+1][j], dp[i][j+1]);
+
+                dp[i][j] = max(1, next - dungeon[i][j]);
+            }
         }
 
-        int right = solve(dungeon, i, j+1);
-        int down = solve(dungeon, i+1, j);
-
-        int result = min(right, down) - dungeon[i][j];
-
-        return t[i][j] = result > 0 ? result : 1;
-    }
-    int calculateMinimumHP(vector<vector<int>>& dungeon) {
-        memset(t, -1, sizeof(t));
-
-        return solve(dungeon, 0, 0);
+        return dp[0][0];
     }
 };
