@@ -1,4 +1,4 @@
-class Solution { // simulation. Brute-force
+class Solution { // Optimized code.
 public:
     int maxDistance(vector<int>& colors) {
         
@@ -6,12 +6,19 @@ public:
 
         int ans = 0;
 
-        for(int i = 0; i < n; i++){
-            for(int j = i+1; j < n; j++){
+        for(int j = n-1; j >= 0; j--){
 
-                if(colors[i] != colors[j]){
-                    ans = max(ans, abs(i - j));
-                }
+            if(colors[j] != colors[0]){
+                ans = j;
+                break;
+            }
+        }
+
+        for(int i = 0; i < n; i++){
+
+            if(colors[i] != colors[n-1]){
+
+                ans = max(ans, n-1-i);
             }
         }
 
