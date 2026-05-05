@@ -11,40 +11,50 @@
 class Solution {
 public:
     ListNode* rotateRight(ListNode* head, int k) {
-
-        if(!head || !head->next)
-        return head;
-
-        if(k == 0 )
-        return head;
         
-        ListNode *temp = head;
-        int n = 0;
+        if(!head || !head->next || k == 0)
+            return head;
 
-        while(temp){ // calculate total number of nodes
-            n++;
+        int len = 1;
+
+        ListNode* temp = head;
+        while(temp->next){
             temp = temp->next;
+
+            len++;
         }
+
+        k = k % len;
+        if(k == 0)
+        return head;
+
+        int cnt = len - k;
+
         temp = head;
-        while(temp->next){ // make given linked list circular (connect last node to head of the linked list)
+        for(int i = 1; i < cnt; i++){
             temp = temp->next;
         }
-        temp->next = head;
 
-        int k1 = k % n; // k may be greater than n
+        ListNode* newHead = temp->next;
 
-        temp = head;
-        int count = 0;
-        while(temp){ // go to the n-k1 th position
-            count++;
-            if(count == n - k1) // rotate left by n-k1 places mean rotate right by k places
-            break;
+        temp->next = NULL;
 
-            temp = temp->next;
+        ListNode* tail = newHead;
+        while(tail->next){
+
+            tail = tail->next;
         }
-        ListNode *ans = temp->next; // temp->next will become head of the rotated linked list
-        temp->next = nullptr; // n-k1 th node ke next ko null kr do
 
-        return ans;
+        tail->next = head;
+
+        return newHead;
     }
 };
+
+
+// Approach - 
+
+// Find length 
+// Find (len - k % len) node → breaking point
+// Split list into two parts 
+// Attach second part to front 
