@@ -1,41 +1,19 @@
 class Solution {
 public:
+    int getCommon(vector<int>& nums1, vector<int>& nums2) {
+        
+        set<int> st;
 
-    int binarySearch(vector<int> & nums2, int target){
+        for(int i = 0; i < nums1.size(); i++){
+            st.insert(nums1[i]);
+        }
 
-        int n = nums2.size();
+        for(int i = 0; i < nums2.size(); i++){
 
-        int low = 0;
-        int high = n-1;
-
-        while(low <= high){
-
-            int mid = low + (high-low)/2;
-
-            if(nums2[mid] < target){
-                low = mid + 1;
-            }else if(nums2[mid] == target){
-
-                return nums2[mid];
-            }else{
-
-                high = mid - 1;
-            }
+            if(st.find(nums2[i]) != st.end())
+            return nums2[i];
         }
 
         return -1;
-    }
-    int getCommon(vector<int>& nums1, vector<int>& nums2) {
-
-        int res = -1;        
-
-        for(int i = 0; i < nums1.size(); i++){
-            res = binarySearch(nums2, nums1[i]);
-
-            if(res != -1)
-            return res;
-        }
-
-        return res;
     }
 };
