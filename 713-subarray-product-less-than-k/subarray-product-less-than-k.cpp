@@ -1,24 +1,35 @@
-class Solution { // Brute - Force.    O(N^2)
+class Solution { // Using Sliding Window Approach.   O(N)
 public:
     int numSubarrayProductLessThanK(vector<int>& nums, int k) {
         
-        int cnt = 0;
+        int n = nums.size();
 
-        for(int i = 0; i < nums.size(); i++){
-            int prod = 1;
+        int i = 0; 
+        int j = 0;
 
-            for(int j = i; j < nums.size(); j++){
+        int ans = 0;
 
-                prod *= nums[j];
+        int prod = 1;
 
-                if(prod < k)
-                cnt++;
+        if(k <= 1)
+        return 0;
 
-                else 
-                break;
+
+        while(j < n){
+
+            prod *= nums[j];
+
+            while(prod >= k){ // shrink when window become invalid
+
+                prod /= nums[i];
+                i++;
             }
+
+            ans += (j - i + 1); // count all subarray ending at j
+
+            j++;
         }
 
-        return cnt;
+        return ans;
     }
 };
