@@ -1,23 +1,21 @@
-class Solution {
+class Solution { // maxPrefix and minPrefix.
 public:
     int maxAbsoluteSum(vector<int>& nums) {
         
-        int maxEnding = nums[0];
-        int maxSubarray = nums[0];
+        int prefix = 0;
 
-        int minEnding = nums[0];
-        int minSubarray = nums[0];
+        int maxPrefix = 0;
+        int minPrefix = 0;
 
-        for(int i = 1; i < nums.size(); i++){
+        for(int i = 0; i < nums.size(); i++){
 
-            maxEnding = max(nums[i], maxEnding + nums[i]);
+            prefix += nums[i];
 
-            maxSubarray = max(maxSubarray, maxEnding);
+            maxPrefix = max(maxPrefix, prefix);
 
-            minEnding = min(nums[i], minEnding + nums[i]);
-            minSubarray = min(minSubarray, minEnding);
+            minPrefix = min(minPrefix, prefix);
         }
 
-        return max(maxSubarray, abs(minSubarray));
+        return maxPrefix - minPrefix;
     }
 };
